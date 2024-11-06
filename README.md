@@ -48,6 +48,8 @@ Estos endpoints están implementados en `UserGrpcService` y están accesibles a 
 
 Cada vez que se registra un usuario en el sistema (desde otro microservicio), se envía un evento `UserCreatedEvent` a través de RabbitMQ. Este evento es consumido por el `RabbitMqConsumerService`, que procesa el mensaje y crea el usuario en la base de datos.
 
+- **Nombre de la queue utilizada**: `RegisterQueue`
+
 ### Ejecución de Pruebas de Rendimiento
 
 Para evaluar el rendimiento del microservicio, se incluye un archivo de **JMeter** (`UserServicePlan.jmx`). Este archivo está preconfigurado con pruebas de carga para los endpoints gRPC y permite simular múltiples solicitudes de usuario para medir la capacidad de respuesta del servicio.
