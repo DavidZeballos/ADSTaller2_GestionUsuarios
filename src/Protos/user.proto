@@ -1,0 +1,31 @@
+syntax = "proto3";
+option csharp_namespace = "UserManagementService";
+
+service UserService {
+    rpc GetUserProfile (UserRequest) returns (UserResponse);
+    rpc UpdateUserProfile (UpdateProfileRequest) returns (UpdateProfileResponse);
+}
+
+message UserRequest {
+    string user_id = 1;
+}
+
+message UserResponse {
+    string id = 1;
+    string name = 2;
+    string first_last_name = 3;
+    string second_last_name = 4;
+    string rut = 5;
+    string email = 6;
+}
+
+message UpdateProfileRequest {
+    string user_id = 1;
+    string name = 2;
+    string first_last_name = 3;
+    string second_last_name = 4;
+}
+
+message UpdateProfileResponse {
+    bool success = 1;
+}
