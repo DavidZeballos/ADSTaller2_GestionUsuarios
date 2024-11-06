@@ -13,8 +13,8 @@ Este microservicio se encarga de la gestión de usuarios en un entorno de arquit
 1. **Clonar el repositorio**:
 
    ```bash
-   git clone https://github.com/tu-repositorio/user-management-service.git
-   cd user-management-service
+   git clone https://github.com/DavidZeballos/ADSTaller2_GestionUsuarios.git
+   cd src
    ```
 
 2. **Configurar el archivo Docker Compose**:
