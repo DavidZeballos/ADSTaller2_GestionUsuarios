@@ -8,6 +8,5 @@ namespace src.Application.DTOs
         public required string SecondLastName { get; set; }
         public required string RUT { get; set; }
         public required string Email { get; set; }
-        public bool IsActive { get; set; } = true;
     }
 }
