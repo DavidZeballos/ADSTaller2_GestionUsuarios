@@ -32,6 +32,13 @@ builder.Services.AddScoped<UpdateUserProfile>();
 
 var app = builder.Build();
 
+// Ejecuta automáticamente las migraciones
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<UserDbContext>();
+    dbContext.Database.Migrate();
+}
+
 // Inicia el consumo de mensajes de RabbitMQ y espera que esté completamente inicializado
 var rabbitConsumer = app.Services.GetRequiredService<RabbitMqConsumerService>();
 await Task.Run(() => rabbitConsumer.StartConsuming()); // Ahora se espera correctamente

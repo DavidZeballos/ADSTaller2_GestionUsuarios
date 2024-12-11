@@ -1,57 +1,21 @@
-# Ignore Visual Studio temporary files, build results, and
-# Windows file system files
+# Build Folders
+src/bin/
+src/obj/
+src/out/
 
-# User-specific files
-*.rsuser
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
-
-# User-specific files (Mono Auto Generated)
-mono_crash.*
-
-# Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-[Aa][Rr][Mm]/
-[Aa][Rr][Mm]64/
-bld/
-[Bb]in/
-[Oo]bj/
-[Ll]og/
-[Ll]ogs/
-
-# Uncomment if you have tasks that create the files below
-# and do not want to check them in
-# publish/
-# *.publish.xml
-
-# Ignore test projects' publish output and build artefacts
-test/**/*.bin/
-test/**/*.obj/
-test/**/bin/
-test/**/obj/
-test/**/TestResults/
-test/**/Test*.trx
-test/**/Test*.coverage
-test/**/*.trx
-
-# ASP.NET Scaffolding
-ScaffoldingReadMe.txt
-
-# Rider files
-.idea/
-.idea_modules/
-
-# VS Code files
+# VS Code Directories
 .vscode/
-.vscode/**
 
-# Packages
-*.nupkg
-# The packages folder
+# Logs
+*.log
+
+# Package directories
+src/**/node_modules/
+src/**/bower_components/
+
+# Visual Studio directories
+.vs/
+
+# Others
+.idea/*
+.env
