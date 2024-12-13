@@ -2,13 +2,14 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
 using System.Text.Json;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using src.Domain.Events;
 using src.Application.UseCases;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace src.Infrastructure.Messaging
 {
-    public class RabbitMqConsumerService
+    public class RabbitMqConsumerService : BackgroundService
     {
         private readonly RabbitMqConfig _config;
         private readonly IServiceProvider _serviceProvider;
@@ -19,7 +20,7 @@ namespace src.Infrastructure.Messaging
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
-        public void StartConsuming()
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var factory = new ConnectionFactory
             {
@@ -28,7 +29,7 @@ namespace src.Infrastructure.Messaging
                 Password = _config.Password
             };
 
-            while (true)
+            while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
@@ -72,13 +73,13 @@ namespace src.Infrastructure.Messaging
                     channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
                     Console.WriteLine("Waiting for messages...");
 
-                    // Salir del bucle si la conexión es exitosa
-                    break;
+                    // Mantener la conexión activa mientras no se detenga el token
+                    await Task.Delay(Timeout.Infinite, stoppingToken);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Could not connect to RabbitMQ: {ex.Message}. Retrying...");
-                    Thread.Sleep(5000); // Esperar 5 segundos antes de reintentar
+                    await Task.Delay(5000, stoppingToken); // Reintentar después de 5 segundos
                 }
             }
         }

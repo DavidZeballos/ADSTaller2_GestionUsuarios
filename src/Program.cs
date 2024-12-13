@@ -17,6 +17,9 @@ builder.Services.AddSingleton(rabbitMqConfig);
 builder.Services.AddSingleton<RabbitMqService>();
 builder.Services.AddSingleton<RabbitMqConsumerService>();
 
+// Registro del RabbitMqConsumerService como BackgroundService
+builder.Services.AddHostedService<RabbitMqConsumerService>();
+
 // Registro de casos de uso y dependencias scoped
 builder.Services.AddScoped<CreateUserFromEvent>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -38,10 +41,6 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<UserDbContext>();
     dbContext.Database.Migrate();
 }
-
-// Inicia el consumo de mensajes de RabbitMQ y espera que esté completamente inicializado
-var rabbitConsumer = app.Services.GetRequiredService<RabbitMqConsumerService>();
-await Task.Run(() => rabbitConsumer.StartConsuming());
 
 app.MapGrpcService<UserGrpcService>();
 app.MapGet("/", () => "User management service is active");
