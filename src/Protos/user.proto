@@ -7,23 +7,23 @@ service UserService {
 }
 
 message UserRequest {
-    string user_id = 1;
+    string UserId = 1;
 }
 
 message UserResponse {
     string id = 1;
     string name = 2;
-    string first_last_name = 3;
-    string second_last_name = 4;
+    string firstLastName = 3;
+    string secondLastName = 4;
     string rut = 5;
     string email = 6;
 }
 
 message UpdateProfileRequest {
-    string user_id = 1;
-    string name = 2;
-    string first_last_name = 3;
-    string second_last_name = 4;
+    string UserId = 1;
+    string Name = 2;
+    string FirstLastName = 3;
+    string SecondLastName = 4;
 }
 
 message UpdateProfileResponse {

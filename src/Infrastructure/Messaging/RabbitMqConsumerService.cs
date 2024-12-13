@@ -4,23 +4,24 @@ using System.Text;
 using System.Text.Json;
 using src.Domain.Events;
 using src.Application.UseCases;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace src.Infrastructure.Messaging
 {
     public class RabbitMqConsumerService
     {
         private readonly RabbitMqConfig _config;
-        private readonly CreateUserFromEvent _createUserFromEvent;
+        private readonly IServiceProvider _serviceProvider;
 
-        public RabbitMqConsumerService(RabbitMqConfig config, CreateUserFromEvent createUserFromEvent)
+        public RabbitMqConsumerService(RabbitMqConfig config, IServiceProvider serviceProvider)
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
-            _createUserFromEvent = createUserFromEvent;
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
         public void StartConsuming()
         {
-            var factory = new ConnectionFactory()
+            var factory = new ConnectionFactory
             {
                 HostName = _config.Host,
                 UserName = _config.Username,
@@ -51,8 +52,10 @@ namespace src.Infrastructure.Messaging
 
                             if (userEvent != null)
                             {
-                                Console.WriteLine("Deserialized UserCreatedEvent successfully.");
-                                await _createUserFromEvent.ExecuteAsync(userEvent);
+                                using var scope = _serviceProvider.CreateScope();
+                                var createUserFromEvent = scope.ServiceProvider.GetRequiredService<CreateUserFromEvent>();
+
+                                await createUserFromEvent.ExecuteAsync(userEvent);
                                 Console.WriteLine($"User with ID {userEvent.UserId} created in database.");
                             }
                             else
@@ -69,12 +72,13 @@ namespace src.Infrastructure.Messaging
                     channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
                     Console.WriteLine("Waiting for messages...");
 
-                    break; // Exit the loop after successful connection
+                    // Salir del bucle si la conexión es exitosa
+                    break;
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Could not connect to RabbitMQ: {ex.Message}. Retrying...");
-                    Thread.Sleep(5000); // Wait 5 seconds before retrying
+                    Thread.Sleep(5000); // Esperar 5 segundos antes de reintentar
                 }
             }
         }
