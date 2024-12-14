@@ -49,19 +49,32 @@ namespace src.Infrastructure.Messaging
 
                         try
                         {
-                            var userEvent = JsonSerializer.Deserialize<UserCreatedEvent>(message);
+                            // Deserializar como un objeto genérico
+                            var jsonDoc = JsonDocument.Parse(message);
 
-                            if (userEvent != null)
+                            // Obtener "data"
+                            if(jsonDoc.RootElement.TryGetProperty("data", out var dataElement))
                             {
-                                using var scope = _serviceProvider.CreateScope();
-                                var createUserFromEvent = scope.ServiceProvider.GetRequiredService<CreateUserFromEvent>();
+                                string data = dataElement.GetRawText();
+                                Console.WriteLine($"Data: {data}");
 
-                                await createUserFromEvent.ExecuteAsync(userEvent);
-                                Console.WriteLine($"User with ID {userEvent.UserId} created in database.");
-                            }
-                            else
-                            {
-                                Console.WriteLine("Failed to deserialize UserCreatedEvent.");
+                                var userEvent = JsonSerializer.Deserialize<UserCreatedEvent>(data);
+
+                                if (userEvent != null)
+                                {
+                                    Console.WriteLine("Deserialized UserCreatedEvent successfully.");
+                                    Console.WriteLine($"UserId: {userEvent?.UserId}, Name: {userEvent?.Name}, Email: {userEvent?.Email}");
+                                    
+                                    using var scope = _serviceProvider.CreateScope();
+                                    var createUserFromEvent = scope.ServiceProvider.GetRequiredService<CreateUserFromEvent>();
+
+                                    await createUserFromEvent.ExecuteAsync(userEvent);
+                                    Console.WriteLine($"User with ID {userEvent.UserId} created in database.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Failed to deserialize UserCreatedEvent.");
+                                }
                             }
                         }
                         catch (Exception ex)
