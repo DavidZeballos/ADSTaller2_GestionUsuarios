@@ -1,5 +1,6 @@
 syntax = "proto3";
 option csharp_namespace = "UserManagementService";
+package User;
 
 service UserService {
     rpc GetUserProfile (UserRequest) returns (UserResponse);
