@@ -12,7 +12,7 @@ using src.Infrastructure.Persistence;
 namespace UserManagementService.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20241106082550_InitialCreate")]
+    [Migration("20241216003411_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -39,9 +39,6 @@ namespace UserManagementService.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -53,6 +50,10 @@ namespace UserManagementService.Migrations
                     b.Property<string>("SecondLastName")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("SubjectIdsJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
 
                     b.HasKey("Id");
 

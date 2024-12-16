@@ -49,22 +49,23 @@ namespace src.Infrastructure.Messaging
 
                         try
                         {
-                            // Deserializar como un objeto genérico
                             var jsonDoc = JsonDocument.Parse(message);
 
-                            // Obtener "data"
-                            if(jsonDoc.RootElement.TryGetProperty("data", out var dataElement))
+                            // Obtener "data" del mensaje JSON
+                            if (jsonDoc.RootElement.TryGetProperty("data", out var dataElement))
                             {
                                 string data = dataElement.GetRawText();
                                 Console.WriteLine($"Data: {data}");
 
+                                // Deserializar UserCreatedEvent
                                 var userEvent = JsonSerializer.Deserialize<UserCreatedEvent>(data);
 
-                                if (userEvent != null)
+                                // Validar que userEvent no sea nulo antes de usarlo
+                                if (userEvent is not null)
                                 {
                                     Console.WriteLine("Deserialized UserCreatedEvent successfully.");
-                                    Console.WriteLine($"UserId: {userEvent?.UserId}, Name: {userEvent?.Name}, Email: {userEvent?.Email}");
-                                    
+                                    Console.WriteLine($"UserId: {userEvent.UserId}, Name: {userEvent.Name}, Email: {userEvent.Email}");
+
                                     using var scope = _serviceProvider.CreateScope();
                                     var createUserFromEvent = scope.ServiceProvider.GetRequiredService<CreateUserFromEvent>();
 
@@ -73,8 +74,12 @@ namespace src.Infrastructure.Messaging
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Failed to deserialize UserCreatedEvent.");
+                                    Console.WriteLine("Deserialized UserCreatedEvent is null.");
                                 }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Message does not contain 'data' property.");
                             }
                         }
                         catch (Exception ex)

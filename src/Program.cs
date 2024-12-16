@@ -33,6 +33,9 @@ builder.Services.AddDbContext<UserDbContext>(options =>
 builder.Services.AddScoped<GetUserProfile>();
 builder.Services.AddScoped<UpdateUserProfile>();
 
+builder.Services.AddScoped<GetUserProgress>();
+builder.Services.AddScoped<UpdateUserProgress>();
+
 var app = builder.Build();
 
 // Ejecuta automáticamente las migraciones
@@ -43,5 +46,6 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.MapGrpcService<UserGrpcService>();
+app.MapGrpcService<ProgressGrpcService>();
 app.MapGet("/", () => "User management service is active");
 app.Run();

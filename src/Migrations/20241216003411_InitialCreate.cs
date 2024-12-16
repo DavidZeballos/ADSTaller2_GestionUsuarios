@@ -21,7 +21,7 @@ namespace UserManagementService.Migrations
                     SecondLastName = table.Column<string>(type: "text", nullable: false),
                     RUT = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
+                    SubjectIdsJson = table.Column<string>(type: "jsonb", nullable: false)
                 },
                 constraints: table =>
                 {

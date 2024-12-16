@@ -1,0 +1,26 @@
+syntax = "proto3";
+option csharp_namespace = "UserManagementService";
+package Progress;
+
+service ProgressService {
+    rpc GetUserProgress (ProgressRequest) returns (ProgressResponse);
+    rpc UpdateUserProgress (UpdateProgressRequest) returns (UpdateProgressResponse);
+}
+
+message ProgressRequest {
+    string UserId = 1;
+}
+
+message ProgressResponse {
+    repeated string SubjectIds = 1; // Lista de IDs de asignaturas
+}
+
+message UpdateProgressRequest {
+    string UserId = 1;
+    repeated string AddSubjectIds = 2;    // IDs a agregar
+    repeated string RemoveSubjectIds = 3; // IDs a remover
+}
+
+message UpdateProgressResponse {
+    bool success = 1;
+}

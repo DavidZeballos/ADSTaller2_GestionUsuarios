@@ -1,3 +1,7 @@
+using System.Text.Json;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
 namespace src.Domain.Entities
 {
     public class User
@@ -8,6 +12,15 @@ namespace src.Domain.Entities
         public required string SecondLastName { get; set; }
         public required string RUT { get; set; }
         public required string Email { get; set; }
-        public bool IsActive { get; set; } = true;
+        // Guardar la lista como JSON en la base de datos
+        public string SubjectIdsJson { get; set; } = "[]";
+
+        // Propiedad no mapeada para trabajar con la lista en memoria
+        [NotMapped]
+        public List<string> SubjectIds
+        {
+            get => JsonSerializer.Deserialize<List<string>>(SubjectIdsJson) ?? new List<string>();
+            set => SubjectIdsJson = JsonSerializer.Serialize(value);
+        }
     }
 }
